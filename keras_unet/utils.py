@@ -21,16 +21,7 @@ def get_augmented(
     Y_val=None,
     batch_size=32,
     seed=0,
-    data_gen_args=dict(
-        rotation_range=10.0,
-        # width_shift_range=0.02,
-        height_shift_range=0.02,
-        shear_range=5,
-        # zoom_range=0.3,
-        horizontal_flip=True,
-        vertical_flip=False,
-        fill_mode="constant",
-    ),
+    data_gen_args=None,
 ):
     """[summary]
     
@@ -46,6 +37,16 @@ def get_augmented(
     Returns:
         [type]: [description]
     """
+    data_gen_args = dict(
+            rotation_range=10.0,
+            # width_shift_range=0.02,
+            height_shift_range=0.02,
+            shear_range=5,
+            # zoom_range=0.3,
+            horizontal_flip=True,
+            vertical_flip=False,
+            fill_mode="constant",
+        ) if data_gen_args is None else data_gen_args
 
     # Train data, provide the same seed and keyword arguments to the fit and flow methods
     X_datagen = ImageDataGenerator(**data_gen_args)
@@ -82,7 +83,7 @@ def get_augmented(
         return train_generator
 
 
-def plot_segm_history(history, metrics=["iou", "val_iou"], losses=["loss", "val_loss"]):
+def plot_segm_history(history, metrics=None, losses=None):
     """[summary]
     
     Args:
@@ -90,6 +91,8 @@ def plot_segm_history(history, metrics=["iou", "val_iou"], losses=["loss", "val_
         metrics (list, optional): [description]. Defaults to ["iou", "val_iou"].
         losses (list, optional): [description]. Defaults to ["loss", "val_loss"].
     """
+    metrics = ["iou", "val_iou"] if metrics is None else metrics
+    losses = ["loss", "val_loss"] if losses is None else losses
     # summarize history for iou
     plt.figure(figsize=(12, 6))
     for metric in metrics:
